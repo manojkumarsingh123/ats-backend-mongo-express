@@ -7,6 +7,11 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    company_id: {
+      type: mongoose.Schema.Types.ObjectId, // <-- FK reference
+      ref: "Company", // <-- model name of the referenced schema
+      default: null, // <-- or set to a specific ObjectId
+    },
     email: {
       type: String,
       required: true,
@@ -48,6 +53,6 @@ userSchema.set("toJSON", {
   },
 });
 
-const User = mongoose.model("User", userSchema);
+const user = mongoose.model("user", userSchema);
 
-module.exports = User;
+module.exports = user;
