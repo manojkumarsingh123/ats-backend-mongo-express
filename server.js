@@ -1,12 +1,16 @@
-const express = require("express");
-const dotenv = require("dotenv");
-const connectDB = require("./config/db");
-const routes = require("./routes/index.route");
+import express from "express";
+import dotenv from "dotenv";
+import connectDB from "./config/db.js";
+import routes from "./routes/index.route.js";
+import seedDatabase from "./seeder/seed.js"; // import seeder function
 
 dotenv.config();
 const app = express();
 
 connectDB(); // Connect to MongoDB
+
+// Run seeder AFTER DB connection
+await seedDatabase();
 
 app.use(express.json());
 

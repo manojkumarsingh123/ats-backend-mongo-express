@@ -26,5 +26,28 @@ module.exports = {
     user: {
       user_not_found: "User not found",
     },
+    job_config: {
+      form_not_found: "Form not found",
+      get_form_list: "Form list fetched successfully",
+      config_field_not_found: "Config Fields not found",
+      get_field_list: "Config Fields list fetched successfully",
+      sub_section_not_found: "Sub Section data not found",
+      sub_section_field_not_found: "Sub Section field data not found",
+      sub_section_field_option_not_found:
+        "Sub Section field option data not found",
+      custom_field_data_not_found: "Custom Field data not found",
+      custom_field_key_exists:
+        " Label name already in use please try another one",
+      field_id_required: "Field ID is required",
+      invalid_field: "Invalid fieldId",
+      grid_group_required: "Grid group is required",
+      invalid_grid_group: "Invalid grid_group",
+      sort_order_is_required: "Sort order is required",
+      invalid_sort_order: "Invalid sort_order",
+      field_id_not_found: "Field ID not found",
+      job_configuration_updated_successfully:
+        "Job configuration updated successfully",
+      failed_to_get_job_config_data: "Failed to get job configuration data",
+    },
   },
 };
