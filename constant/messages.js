@@ -1,4 +1,4 @@
-module.exports = {
+const messages = {
   status: {
     create: 201,
     success: 200,
@@ -22,6 +22,10 @@ module.exports = {
       login_success: "Login successfully",
       email_exist: "Email already exist",
       invalid_email_password: "Invalid Email Or Password",
+    },
+    token: {
+      auth_invalid_token: "Invalid token",
+      auth_token_missing: "Token is missing",
     },
     user: {
       user_not_found: "User not found",
@@ -51,3 +55,5 @@ module.exports = {
     },
   },
 };
+
+export default messages;

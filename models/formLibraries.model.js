@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const formLibrarySchema = new mongoose.Schema(
   {
@@ -6,16 +6,16 @@ const formLibrarySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    company_id: {
+    companyId: {
       type: mongoose.Schema.Types.ObjectId, // Assuming Company has an ObjectId
       ref: "Company",
       default: null, // Use `null` to match Sequelize's `allowNull: true`
     },
-    is_enabled: {
+    isEnabled: {
       type: Boolean,
       default: true,
     },
-    is_deleted: {
+    isDeleted: {
       type: Boolean,
       default: false,
     },
@@ -25,4 +25,4 @@ const formLibrarySchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("FormLibrary", formLibrarySchema);
+export default mongoose.model("FormLibrary", formLibrarySchema);

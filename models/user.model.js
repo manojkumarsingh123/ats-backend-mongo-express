@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema(
   {
@@ -7,10 +7,10 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
-    company_id: {
-      type: mongoose.Schema.Types.ObjectId, // <-- FK reference
-      ref: "Company", // <-- model name of the referenced schema
-      default: null, // <-- or set to a specific ObjectId
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId, // Foreign key reference
+      ref: "Company", // Referenced model name
+      default: null, // Allow null
     },
     email: {
       type: String,
@@ -23,11 +23,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    is_active: {
+    isActive: {
       type: Boolean,
       default: true,
     },
-    is_deleted: {
+    isDeleted: {
       type: Boolean,
       default: false,
     },
@@ -37,22 +37,21 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Mongoose automatically assigns a unique _id (as ObjectId) for each document
-// But you can create a virtual `id` field that’s easier to work with
-
+// Virtual 'id' field for easier usage instead of '_id'
 userSchema.virtual("id").get(function () {
   return this._id.toHexString();
 });
 
+// Customize JSON output: include virtuals, remove _id and password
 userSchema.set("toJSON", {
   virtuals: true,
   versionKey: false,
   transform: (_, ret) => {
     delete ret._id;
-    delete ret.password; // remove password from output
+    delete ret.password;
   },
 });
 
-const user = mongoose.model("user", userSchema);
+const user = mongoose.model("User", userSchema);
 
-module.exports = user;
+export default user;

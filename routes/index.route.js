@@ -1,13 +1,14 @@
-const express = require("express");
-const router = express.Router();
+import express from "express";
+import authRoute from "./auth.routes.js";
+import userRoute from "./user.routes.js";
+import jobConfigRoute from "./jobConfig.routes.js";
+import jobDescriptionTemplateRoute from "./jobDescription.route.js";
 
-/** all routes */
-const authRoute = require("./auth.routes");
-const userRoute = require("./user.routes");
-const jobConfigRoute = require("./jobConfig.routes");
+const router = express.Router();
 
 router.use("/auth", authRoute);
 router.use("/user", userRoute);
 router.use("/job-config", jobConfigRoute);
+router.use("/job-description-templates", jobDescriptionTemplateRoute);
 
-module.exports = router;
+export default router;

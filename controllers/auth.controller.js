@@ -1,16 +1,20 @@
-const user = require("../models/user.model");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const Res = require("../constant/messages");
+import user from "../models/user.model.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import Res from "../constant/messages.js";
 
-const registerUser = async (req, res) => {
-  const { name, email, password, company_id } = req.body;
+export const registerUser = async (req, res) => {
+  const { name, email, password, companyId } = req.body;
 
   try {
     // Check if user already exists
-    const existingUser = await user.findOne({ email });
+    const existingUser = await user.findOne({
+      email,
+      isDeleted: false,
+      isActive: true,
+    });
     if (existingUser) {
-      return res.status(400).json({
+      return res.status(Res.status.bad_request).json({
         code: Res.status.bad_request,
         message: Res.messages.login.email_exist,
       });
@@ -24,13 +28,13 @@ const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      company_id,
+      companyId,
     });
 
     await newUser.save();
 
     // Return user (excluding password)
-    return res.status(201).json({
+    return res.status(Res.status.create).json({
       code: Res.status.create,
       message: "User registered successfully",
       data: {
@@ -38,39 +42,44 @@ const registerUser = async (req, res) => {
           id: newUser._id,
           name: newUser.name,
           email: newUser.email,
-          company_id: newUser.company_id,
+          companyId: newUser.companyId,
         },
       },
     });
   } catch (error) {
     console.error("Registration error:", error);
-    return res.status(500).json({
+    return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: Res.messages.internal_server_error,
     });
   }
 };
 
-const loginUser = async (req, res) => {
+export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("email", email);
-    const JWT_SECRET = process.env.JWT_SECRET || "ABC";
-
+    const JWT_SECRET = process.env.JWT_SECRET;
+    console.log("JWT_SECRET login:", JWT_SECRET);
     // Check if user already exists
-    const existingUser = await user.findOne({ email });
+    const existingUser = await user.findOne({
+      email,
+      isDeleted: false,
+      isActive: true,
+    });
     if (!existingUser) {
-      return res.status(400).json({
+      return res.status(Res.status.bad_request).json({
         code: Res.status.bad_request,
         message: Res.messages.user.user_not_found,
       });
     }
 
-    //Compare password
-
-    let isMatchPassword = bcrypt.compare(password, existingUser.password);
+    // Compare password
+    const isMatchPassword = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
     if (!isMatchPassword) {
-      return res.status(400).json({
+      return res.status(Res.status.bad_request).json({
         code: Res.status.bad_request,
         message: Res.messages.login.invalid_email_password,
       });
@@ -78,13 +87,18 @@ const loginUser = async (req, res) => {
 
     // Generate token
     const token = jwt.sign(
-      { id: existingUser._id, email: existingUser.email },
+      {
+        id: existingUser._id,
+        email: existingUser.email,
+        companyId: existingUser.companyId,
+      },
       JWT_SECRET,
       { expiresIn: "1h" } // token expiry time
     );
+
     // Send response with token
-    res.status(200).json({
-      code: Res.status.bad_request,
+    return res.status(Res.status.success).json({
+      code: Res.status.success,
       message: Res.messages.login.login_success,
       data: {
         token,
@@ -92,19 +106,15 @@ const loginUser = async (req, res) => {
           id: existingUser._id,
           name: existingUser.name,
           email: existingUser.email,
+          companyId: existingUser.companyId,
         },
       },
     });
   } catch (error) {
     console.error("Login error:", error);
-    return res.status(400).json({
+    return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: Res.messages.internal_server_error,
     });
   }
-};
-
-module.exports = {
-  registerUser,
-  loginUser,
 };

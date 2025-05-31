@@ -40,7 +40,8 @@ If there's no validation error, the middleware calls next(), which passes contro
 
  */
 
-const Res = require("../constant/messages");
+import Res from "../constant/messages.js";
+
 const validate = (schema) => {
   return (req, res, next) => {
     const { error } = schema.validate(req.body);
@@ -54,4 +55,4 @@ const validate = (schema) => {
   };
 };
 
-module.exports = validate;
+export default validate;

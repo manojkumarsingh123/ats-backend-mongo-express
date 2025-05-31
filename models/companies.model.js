@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const companySchema = new mongoose.Schema(
   {
@@ -6,7 +6,7 @@ const companySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    phone_no: {
+    phoneNo: {
       type: String,
       required: true,
     },
@@ -20,23 +20,23 @@ const companySchema = new mongoose.Schema(
     },
     logo: {
       type: String,
-      default: null, // In case logo is not provided
+      default: null, // optional logo
     },
-    company_domain: {
+    companyDomain: {
       type: String,
-      default: null, // In case company_domain is not provided
+      default: null, // optional domain
     },
-    is_deleted: {
+    isDeleted: {
       type: Boolean,
       required: true,
       default: false,
     },
   },
   {
-    timestamps: true, // Automatically add createdAt and updatedAt fields
+    timestamps: true, // adds createdAt & updatedAt
   }
 );
 
 const Company = mongoose.model("Company", companySchema);
 
-module.exports = Company;
+export default Company;

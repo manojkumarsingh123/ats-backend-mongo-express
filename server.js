@@ -1,21 +1,23 @@
-import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import connectDB from "./config/db.js";
 import routes from "./routes/index.route.js";
-import seedDatabase from "./seeder/seed.js"; // import seeder function
+import seedDatabase from "./seeder/seed.js";
 
-dotenv.config();
 const app = express();
 
-connectDB(); // Connect to MongoDB
+const startServer = async () => {
+  await connectDB(); // Connect to MongoDB
+  await seedDatabase(); // Seed data after DB connection
 
-// Run seeder AFTER DB connection
-await seedDatabase();
+  app.use(express.json());
+  app.use("/api", routes);
 
-app.use(express.json());
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+};
 
-// Use Auth Routes
-app.use("/api", routes);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+startServer().catch((error) => {
+  console.error("Failed to start server:", error);
+});
