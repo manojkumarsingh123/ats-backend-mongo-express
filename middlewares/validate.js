@@ -44,7 +44,18 @@ import Res from "../constant/messages.js";
 
 const validate = (schema) => {
   return (req, res, next) => {
-    const { error } = schema.validate(req.body);
+    console.log("Request body:", req.body); // DEBUG
+    if (!req.body || Object.keys(req.body).length === 0) {
+      return res.status(400).json({
+        code: Res.status.bad_request,
+        message: "Request body is required",
+      });
+    }
+    const { error } = schema.validate(req.body, {
+      abortEarly: false, // get all errors, not just the first
+      allowUnknown: false, // disallow fields not in schema
+      stripUnknown: true, // remove extra fields
+    });
     if (error) {
       return res.status(400).json({
         code: Res.status.bad_request,

@@ -93,7 +93,7 @@ export const loginUser = async (req, res) => {
         companyId: existingUser.companyId,
       },
       JWT_SECRET,
-      { expiresIn: "1h" } // token expiry time
+      { expiresIn: "24h" } // token expiry time
     );
 
     // Send response with token

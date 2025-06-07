@@ -3,9 +3,16 @@ import {
   addJobDescription,
   listJobDescription,
   jobDescriptionById,
+  removeJobDescription,
+  updateJobDescription,
+  updateJobDescriptionStatus,
 } from "../controllers/jobDescription.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
-import { addJobDescriptionSchema } from "../validations/jobDescription.validator.js";
+import {
+  addJobDescriptionSchema,
+  updateJobDescriptionSchema,
+  updateJobDescriptionStatusSchema,
+} from "../validations/jobDescription.validator.js";
 import validate from "../middlewares/validate.js";
 
 const router = express.Router();
@@ -21,5 +28,21 @@ router.post(
 router.get("/list", authMiddleware, listJobDescription);
 
 router.get("/:id", authMiddleware, jobDescriptionById);
+
+router.delete("/:id/remove", authMiddleware, removeJobDescription);
+
+router.patch(
+  "/:id/update",
+  validate(updateJobDescriptionSchema),
+  authMiddleware,
+  updateJobDescription
+);
+
+router.patch(
+  "/:id/status",
+  validate(updateJobDescriptionStatusSchema),
+  authMiddleware,
+  updateJobDescriptionStatus
+);
 
 export default router;
