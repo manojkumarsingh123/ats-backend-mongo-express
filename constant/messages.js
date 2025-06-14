@@ -53,6 +53,10 @@ const messages = {
         "Job configuration updated successfully",
       failed_to_get_job_config_data: "Failed to get job configuration data",
     },
+    drop_down: {
+      drop_down_list_fetched_successfully:
+        "Drop down list fetched successfully",
+    },
   },
 };
 

@@ -6,33 +6,33 @@ const dropDownValueSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    created_by: {
+    createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    updated_by: {
+    updatedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    is_active: {
+    isActive: {
       type: Boolean,
       default: true,
     },
-    company_id: {
+    companyId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Company",
     },
-    is_deleted: {
+    isDeleted: {
       type: Boolean,
       default: false,
     },
-    is_mandatory: {
+    isMandatory: {
       type: Boolean,
       default: false,
     },
-    dropdown_id: {
+    dropdownId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "DropDownLibrary",
       required: true,

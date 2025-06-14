@@ -5,7 +5,7 @@ import Res from "../constant/messages.js";
 
 export const registerUser = async (req, res) => {
   const { name, email, password, companyId } = req.body;
-
+  console.log("registerUser controller started");
   try {
     // Check if user already exists
     const existingUser = await user.findOne({
@@ -47,7 +47,7 @@ export const registerUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Registration error:", error);
+    console.error("Error in registerUser controller", error);
     return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: Res.messages.internal_server_error,
@@ -56,6 +56,7 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
+  console.log("loginUser controller started");
   try {
     const { email, password } = req.body;
     const JWT_SECRET = process.env.JWT_SECRET;
@@ -111,7 +112,7 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("Login error:", error);
+    console.error("Error in loginUser controller", error);
     return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: Res.messages.internal_server_error,

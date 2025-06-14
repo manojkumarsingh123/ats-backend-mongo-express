@@ -7,11 +7,15 @@ export const getJobConfigForm = async (req, res) => {
     // Get pagination parameters
     const { page, limit, offset } = getPagination(req.query);
     console.log("page ,limit ,offset", page, limit, offset);
-    console.log("getJobConfigForm started");
+    console.log("getJobConfigForm controller started");
     // find out all form list
-    const filter = { isEnabled: true, isDeleted: false };
+    const filter = {
+      isEnabled: true,
+      isDeleted: false,
+      companyId: req.user.companyId,
+    };
     const formList = await form.find(filter);
-    const count = await form.countDocuments(filter); // A Mongoose method that counts documents matching the given filter without retrieving them.
+    const count = await form.countDocuments(filter).skip(offset).limit(limit); // A Mongoose method that counts documents matching the given filter without retrieving them.
     console.log("formList", formList);
     console.log("count", count);
 
@@ -29,7 +33,7 @@ export const getJobConfigForm = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("Error in getJobConfigForm:", error);
+    console.error("Error in getJobConfigForm controller", error);
     return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: error?.message || Res.messages.internal_server_error,
