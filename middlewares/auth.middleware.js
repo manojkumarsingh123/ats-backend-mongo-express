@@ -4,6 +4,7 @@ import Res from "../constant/messages.js"; // Your centralized messages
 // dotenv.config();
 
 const authMiddleware = (req, res, next) => {
+  console.log("Auth middleware triggered");
   const JWT_SECRET = process.env.JWT_SECRET;
   console.log("JWT_SECRET:", JWT_SECRET); // Debugging line to check if JWT_SECRET is set
   const authHeader = req.headers.authorization;

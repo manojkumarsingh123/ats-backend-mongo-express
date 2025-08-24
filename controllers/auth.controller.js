@@ -4,7 +4,8 @@ import jwt from "jsonwebtoken";
 import Res from "../constant/messages.js";
 
 export const registerUser = async (req, res) => {
-  const { name, email, password, companyId } = req.body;
+  const { name, email, password } = req.body;
+  console.log("company id:", req.user.companyId);
   console.log("registerUser controller started");
   try {
     // Check if user already exists
@@ -28,7 +29,7 @@ export const registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      companyId,
+      companyId: req.user.companyId,
     });
 
     await newUser.save();

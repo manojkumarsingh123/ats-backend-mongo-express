@@ -38,7 +38,7 @@ export const listJobDescription = async (req, res) => {
     return res.status(Res.status.success).json({
       code: Res.status.success,
       message: "Job Description List fetch successfully",
-      data: data,
+      data: Array.isArray(data) && data.length > 0 ? data : [],
     });
   } catch (error) {
     console.log("Error in listJobDescription controller", error);
@@ -58,10 +58,11 @@ export const jobDescriptionById = async (req, res) => {
       _id: req.params.id,
       isDeleted: false,
     });
+    console.log("data", data);
     return res.status(Res.status.success).json({
       code: Res.status.success,
       message: "Job Description fetch successfully",
-      data: data,
+      data: Array.isArray(data) && data.length > 0 ? data : [],
     });
   } catch (error) {
     console.log("Error in jobDescriptionById controller", error);
@@ -85,6 +86,12 @@ export const removeJobDescription = async (req, res) => {
     });
 
     console.log("fetchData", fetchData);
+
+    if (!fetchData) {
+      return res.status(Res.status.not_found).json({
+        message: "Job Description not found",
+      });
+    }
 
     if (fetchData?.isDeleted === true) {
       return res.status(Res.status.bad_request).json({

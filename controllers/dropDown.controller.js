@@ -18,7 +18,10 @@ export const getDropDownList = async (req, res) => {
     const dropDownList = await dropDownLib
       .find(filter)
       .skip(offset)
-      .limit(limit);
+      .limit(limit)
+      .populate("createdBy", "name")
+      .populate("updatedBy", "name")
+      .lean(); // returns plain JS objects
     const count = await dropDownLib.countDocuments(filter); // A Mongoose method that counts documents matching the given filter without retrieving them.
     console.log("dropDownList", dropDownList);
     console.log("count", count);
