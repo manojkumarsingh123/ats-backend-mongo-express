@@ -1,4 +1,5 @@
 import dropDownLib from "../models/dropDownLibraries.model.js";
+import dropDownValue from "../models/dropDownValues.model.js";
 import Res from "../constant/messages.js";
 import { getPagination, getPaginationResponse } from "../utils/pagination.js";
 
@@ -29,7 +30,7 @@ export const getDropDownList = async (req, res) => {
     if (dropDownList && dropDownList.length > 0) {
       return res.status(Res.status.success).json({
         code: Res.status.success,
-        message: Res.messages.drop_down.drop_down_list_fetched_successfully,
+        message: Res.messages.drop_down.drop_down_list,
         ...getPaginationResponse(dropDownList, count, page, limit),
       });
     } else {
@@ -41,6 +42,63 @@ export const getDropDownList = async (req, res) => {
     }
   } catch (error) {
     console.error("Error in getDropDownList controller ", error);
+    return res.status(Res.status.internal_server_error).json({
+      code: Res.status.internal_server_error,
+      message: error?.message || Res.messages.internal_server_error,
+    });
+  }
+};
+
+export const listDropDownValue = async (req, res) => {
+  try {
+    // Get pagination parameters
+    const { page, limit, offset } = getPagination(req.query);
+    console.log("page ,limit ,offset", page, limit, offset);
+    console.log("listDropDownValue controller started");
+    console.log("req.user", req.user);
+    const dropdownId = req.params.id;
+    console.log("dropdownId", dropdownId);
+    if (dropdownId === undefined || dropdownId === null || dropdownId === "") {
+      return res.status(Res.status.bad_request).json({
+        code: Res.status.bad_request,
+        message: Res.messages.id_is_required,
+      });
+    }
+    // find out all drop down value list
+    const filter = {
+      dropdownId,
+      isDeleted: false,
+      companyId: req.user.companyId,
+    };
+
+    console.log("filter", filter);
+    const dropDownValueList = await dropDownValue
+      .find(filter)
+      .select("id name isActive createdAt updatedAt companyId dropdownId")
+      .skip(offset)
+      .limit(limit)
+      .populate("createdBy", "name")
+      .populate("updatedBy", "name")
+      .lean(); // returns plain JS objects
+    const count = await dropDownValue.countDocuments(filter); // A Mongoose method that counts documents matching the given filter without retrieving them.
+    console.log("dropDownValueList", dropDownValueList);
+    console.log("count", count);
+
+    if (dropDownValueList && dropDownValueList.length > 0) {
+      return res.status(Res.status.success).json({
+        code: Res.status.success,
+        message: Res.messages.drop_down.drop_down_list,
+        ...getPaginationResponse(dropDownValueList, count, page, limit),
+      });
+    } else {
+      return res.status(Res.status.not_found).json({
+        code: Res.status.not_found,
+        message: "No drop down  value list found",
+        data: [],
+      });
+    }
+  } catch (error) {
+    console.error("Error in listDropDownValue controller ", error);
     return res.status(Res.status.internal_server_error).json({
       code: Res.status.internal_server_error,
       message: error?.message || Res.messages.internal_server_error,
